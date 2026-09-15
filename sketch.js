@@ -5,19 +5,29 @@ function setup() {
 function draw() {
   background(245);
   //shell center
-  let cx = width / 2;
-  let cy = height * 0.7;
+  noFill();
+  let centerX = width / 2;
+  let centerY = height * 0.7;
 
-  circle(cx, cy, 10);
+  circle(centerX, centerY, 10);
 
-  // draw radial ribs
-  for (let angle = -PI * 0.8; angle <= -PI * 0.2; angle += 0.1) {
+  beginShape();
+
+  vertex(centerX, centerY);
+
+  for (let angle = -PI * 0.8; angle <= -PI * 0.2; angle += 0.05) {
     let centerBoost = cos(angle + HALF_PI) * 80;
     let radius = 220 + centerBoost;
 
-    let x = cx + cos(angle) * radius;
-    let y = cy + sin(angle) * radius;
+    let x = centerX + cos(angle) * radius;
+    let y = centerY + sin(angle) * radius;
 
-    line(cx, cy, x, y);
+    line(centerX, centerY, x, y);
+
+    vertex(x, y);
   }
+
+  vertex(centerX, centerY);
+
+  endShape();
 }
