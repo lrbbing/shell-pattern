@@ -7,10 +7,24 @@ let asymmetryAmplitude = 12;
 let growthStart = 0.18;
 let growthRate = 1.3;
 
+let noiseScale = 1.5;
+let noiseAmplitude = 12;
+
+let seed = 1;
+
 function setup() {
   createCanvas(700, 700);
+  noiseSeed(seed);
+  noLoop();
 }
 
+function keyPressed() {
+  if (key === "r" || key === "R") {
+    seed = floor(random(10000));
+    noiseSeed(seed);
+    redraw();
+  }
+}
 function draw() {
   background(245);
   noFill();
@@ -60,11 +74,19 @@ function draw() {
 }
 
 function shellRadius(angle) {
+  let irregularity = map(
+    noise(angle * noiseScale),
+    0,
+    1,
+    -noiseAmplitude,
+    noiseAmplitude,
+  );
+
   let centerBoost = cos(angle + HALF_PI) * 80;
 
   let edgeWave = sin(angle * edgeFrequency) * edgeAmplitude;
 
   let asymmetry = sin(angle * asymmetryFrequency + 0.8) * asymmetryAmplitude;
 
-  return 220 + centerBoost + edgeWave + asymmetry;
+  return 220 + centerBoost + edgeWave + asymmetry + irregularity;
 }
