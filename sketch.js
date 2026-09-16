@@ -4,6 +4,9 @@ let edgeAmplitude = 8;
 let asymmetryFrequency = 2;
 let asymmetryAmplitude = 12;
 
+let growthStart = 0.18;
+let growthRate = 1.3;
+
 function setup() {
   createCanvas(700, 700);
 }
@@ -38,7 +41,7 @@ function draw() {
   endShape();
 
   // growth lines
-  for (let t = 0.2; t < 1; t += 0.1) {
+  for (let t = growthStart; t < 1; t *= growthRate) {
     beginShape();
 
     for (let angle = -PI * 0.8; angle <= -PI * 0.2; angle += 0.05) {
