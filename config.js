@@ -18,3 +18,6 @@ let ribStepMin = 0.035;
 let ribStepMax = 0.065;
 
 let seed = 1;
+
+let showRibs = true;
+let showGrowthLines = true;
