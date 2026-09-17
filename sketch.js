@@ -1,92 +1,32 @@
-let edgeFrequency = 10;
-let edgeAmplitude = 8;
-
-let asymmetryFrequency = 2;
-let asymmetryAmplitude = 12;
-
-let growthStart = 0.18;
-let growthRate = 1.3;
-
-let noiseScale = 1.5;
-let noiseAmplitude = 12;
-
-let seed = 1;
-
 function setup() {
   createCanvas(700, 700);
+
   noiseSeed(seed);
+
   noLoop();
 }
 
-function keyPressed() {
-  if (key === "r" || key === "R") {
-    seed = floor(random(10000));
-    noiseSeed(seed);
-    redraw();
-  }
-}
 function draw() {
   background(245);
   noFill();
 
-  // shell center
   let centerX = width / 2;
   let centerY = height * 0.7;
 
   circle(centerX, centerY, 10);
 
-  // shell outline + radial ribs
-  beginShape();
-  vertex(centerX, centerY);
-
-  for (let angle = -PI * 0.8; angle <= -PI * 0.2; angle += 0.05) {
-    let radius = shellRadius(angle);
-
-    let x = centerX + cos(angle) * radius;
-    let y = centerY + sin(angle) * radius;
-
-    strokeWeight(1.2);
-    line(centerX, centerY, x, y);
-
-    vertex(x, y);
-  }
-
-  vertex(centerX, centerY);
-  endShape();
-
-  // growth lines
-  for (let t = growthStart; t < 1; t *= growthRate) {
-    beginShape();
-
-    for (let angle = -PI * 0.8; angle <= -PI * 0.2; angle += 0.05) {
-      let radius = shellRadius(angle);
-      let growthRadius = radius * t;
-
-      let x = centerX + cos(angle) * growthRadius;
-      let y = centerY + sin(angle) * growthRadius;
-
-      strokeWeight(0.6);
-      vertex(x, y);
-    }
-
-    endShape();
-  }
+  drawRadialRibs(centerX, centerY);
+  drawGrowthLines(centerX, centerY);
 }
 
-function shellRadius(angle) {
-  let irregularity = map(
-    noise(angle * noiseScale),
-    0,
-    1,
-    -noiseAmplitude,
-    noiseAmplitude,
-  );
+function keyPressed() {
+  if (key === "r" || key === "R") {
+    seed = floor(random(10000));
 
-  let centerBoost = cos(angle + HALF_PI) * 80;
+    noiseSeed(seed);
 
-  let edgeWave = sin(angle * edgeFrequency) * edgeAmplitude;
+    redraw();
 
-  let asymmetry = sin(angle * asymmetryFrequency + 0.8) * asymmetryAmplitude;
-
-  return 220 + centerBoost + edgeWave + asymmetry + irregularity;
+    console.log("seed:", seed);
+  }
 }
