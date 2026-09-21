@@ -19,3 +19,13 @@ function shellRadius(angle) {
 
   return 220 + centerBoost + edgeWave + asymmetry + irregularity;
 }
+
+function surfacePoint(angle, t, centerX, centerY) {
+  // t = 0 is the shell origin, and t = 1 is the outer edge.
+  let radius = shellRadius(angle) * t;
+
+  return {
+    x: centerX + cos(angle) * radius,
+    y: centerY + sin(angle) * radius,
+  };
+}

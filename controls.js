@@ -55,7 +55,7 @@ function createPatternControls() {
   buttons.class("pattern-buttons");
   buttons.parent(group);
 
-  for (let mode of ["Ribbed", "Growth", "Spotted"]) {
+  for (let mode of ["Ribbed", "Growth", "Spotted", "Banding"]) {
     let button = createButton(mode);
     button.parent(buttons);
     button.attribute("type", "button");

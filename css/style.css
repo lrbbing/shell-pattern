@@ -100,12 +100,12 @@ h1 {
 }
 
 .pattern-buttons {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 6px;
 }
 
 .pattern-buttons button {
-  flex: 1;
   padding: 8px 4px;
   border: 1px solid #bbb;
   border-radius: 4px;

@@ -17,6 +17,12 @@ let ribNoiseScale = 2;
 let ribStepMin = 0.035;
 let ribStepMax = 0.065;
 
+let bandStart = 0.28;
+let bandEnd = 0.94;
+let bandSpacing = 0.11;
+let bandWaveFrequency = 5;
+let bandWaveAmplitude = 0.025;
+
 let seed = 1;
 
 let patternMode = "Ribbed";

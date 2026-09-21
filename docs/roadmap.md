@@ -1,6 +1,6 @@
 # Roadmap
 
-Stage 7A — Pattern Modes is the current stage. Stages 0–6 are completed foundations reflected in the current project.
+Stage 7B — Shell Surface Coordinates is the current stage. Stages 0–6 and Stage 7A are completed foundations reflected in the current project.
 
 | Stage | Status | Current implementation |
 | --- | --- | --- |
@@ -11,5 +11,5 @@ Stage 7A — Pattern Modes is the current stage. Stages 0–6 are completed foun
 | Stage 4 — Natural irregularity with noise | Completed | Seeded noise varies the shell shape, rib spacing, and growth lines. |
 | Stage 5 — Multi-file project structure | Completed | Parameters, geometry, patterns, controls, drawing, and styling live in separate files. |
 | Stage 6 — Interaction and DOM parameter controls | Completed | Three sliders with value labels; keyboard regeneration, visibility toggles, and PNG saving; event-driven redraw. |
-| Stage 7 — Pattern modes / richer shell surface systems | **Current: Stage 7A — Pattern Modes** | Ribbed, Growth, and Spotted drawing modes with DOM selection buttons. Broader surface systems remain to be explored. |
+| Stage 7 — Pattern modes / richer shell surface systems | **Current: Stage 7B — Shell Surface Coordinates** | Stage 7A added Ribbed, Growth, and Spotted modes. Stage 7B adds Banding and maps shell-surface `(angle, t)` coordinates to canvas `(x, y)` positions. Broader surface systems remain to be explored. |
 | Stage 8 — Open-source / GitHub exploration and project finishing | Future placeholder | To be explored. |
