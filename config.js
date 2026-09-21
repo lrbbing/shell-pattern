@@ -19,5 +19,7 @@ let ribStepMax = 0.065;
 
 let seed = 1;
 
+let patternMode = "Ribbed";
+
 let showRibs = true;
 let showGrowthLines = true;
