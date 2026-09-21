@@ -25,15 +25,7 @@ function draw() {
   // shell center
   circle(centerX, centerY, 10);
 
-  // radial ribs
-  if (showRibs) {
-    drawRadialRibs(centerX, centerY);
-  }
-
-  // growth lines
-  if (showGrowthLines) {
-    drawGrowthLines(centerX, centerY);
-  }
+  drawPattern(centerX, centerY);
 
   drawInfo();
 }

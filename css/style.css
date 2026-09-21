@@ -93,6 +93,40 @@ h1 {
   margin-bottom: 0;
 }
 
+.pattern-heading {
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.pattern-buttons {
+  display: flex;
+  gap: 6px;
+}
+
+.pattern-buttons button {
+  flex: 1;
+  padding: 8px 4px;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  background: white;
+  color: #333;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.pattern-buttons button[aria-pressed="true"] {
+  background: #333;
+  border-color: #333;
+  color: white;
+}
+
+.pattern-buttons button:focus-visible {
+  outline: 2px solid #333;
+  outline-offset: 3px;
+}
+
 
 /* -----------------------------
    label + value
