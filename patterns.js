@@ -1,8 +1,10 @@
 function drawPattern(centerX, centerY) {
+  // Draw the shared shell structure before its surface pattern.
+  if (showRibs) {
+    drawRadialRibs(centerX, centerY);
+  }
+
   if (patternMode === "Ribbed") {
-    if (showRibs) {
-      drawRadialRibs(centerX, centerY);
-    }
     if (showGrowthLines) {
       drawGrowthLines(centerX, centerY);
     }
@@ -14,6 +16,8 @@ function drawPattern(centerX, centerY) {
     }
   } else if (patternMode === "Spotted") {
     drawSpots(centerX, centerY);
+  } else if (patternMode === "Banding") {
+    drawBanding(centerX, centerY);
   }
 }
 
@@ -105,6 +109,30 @@ function drawSpots(centerX, centerY) {
       let y = centerY + sin(spotAngle) * radius;
       circle(x, y, diameter);
     }
+  }
+
+  pop();
+}
+
+function drawBanding(centerX, centerY) {
+  push();
+  noFill();
+  stroke(100);
+  strokeWeight(2);
+
+  for (let t = bandStart; t <= bandEnd; t += bandSpacing) {
+    beginShape();
+
+    for (let angle = -PI * 0.8; angle <= -PI * 0.2; angle += 0.025) {
+      // angle changes the wave across the fan. t shifts each band.
+      let wave = sin(angle * bandWaveFrequency + t * 12);
+      let waveT = t + wave * bandWaveAmplitude;
+      let point = surfacePoint(angle, waveT, centerX, centerY);
+
+      vertex(point.x, point.y);
+    }
+
+    endShape();
   }
 
   pop();

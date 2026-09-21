@@ -6,10 +6,10 @@ A beginner-friendly p5.js creative coding and learning project exploring generat
 
 - Radial shell geometry with scalloped edges and asymmetry.
 - Radial ribs and growth lines, with noise-based variation in shape, rib spacing, and growth lines.
-- Pattern buttons: **Ribbed** keeps the original ribs and growth lines, **Growth** draws denser contours, and **Spotted** draws seeded dots within the shell.
+- Pattern buttons: **Ribbed** keeps the original ribs and growth lines, **Growth** draws denser contours, **Spotted** draws seeded dots, and **Banding** draws restrained waves across the shell surface.
 - A 700 × 700 canvas displaying the current seed and keyboard shortcuts.
 - DOM sliders for edge frequency, noise amplitude, and growth rate, with visible values.
-- Keyboard controls: **R** regenerates with a new seed, **B** toggles ribs and their outline in Ribbed, **G** toggles contours in Ribbed and Growth, and **S** saves a PNG. Visibility settings persist when switching modes; Spotted uses neither toggle.
+- Keyboard controls: **R** regenerates with a new seed, **B** toggles the shared ribs in every mode, **G** toggles contours in Ribbed and Growth, and **S** saves a PNG. Visibility settings persist when switching modes; Spotted and Banding do not use the growth-line toggle.
 - Static drawing using `noLoop()` and event-driven `redraw()`.
 
 ## Run with Live Server
@@ -25,8 +25,8 @@ No build step is required. An internet connection is needed to load p5.js 2.2.3 
 
 - `index.html` — loads p5.js and project scripts; contains canvas and controls containers.
 - `config.js` — generation parameters, seed, pattern mode, and visibility settings.
-- `shell.js` — shell radius and shape calculations.
-- `patterns.js` — pattern selection, radial ribs, growth contours, and seeded dots.
+- `shell.js` — shell radius, shape calculations, and surface-coordinate conversion.
+- `patterns.js` — pattern selection, radial ribs, growth contours, seeded dots, and surface banding.
 - `controls.js` — DOM sliders, value labels, and parameter updates.
 - `sketch.js` — setup, drawing, keyboard interaction, and image saving.
 - `css/style.css` — page layout and control panel styling.

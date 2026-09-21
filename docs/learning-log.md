@@ -30,6 +30,7 @@ This records the user's reported learning progress and preferred workflow.
 - CSS Flexbox
 - Larger-project navigation
 - Reading large diffs
+- Shell surface parameter space: `angle` across the shell fan and normalized growth position `t` from origin to edge
 
 ## Workflow preference
 
