@@ -23,6 +23,13 @@ let bandSpacing = 0.11;
 let bandWaveFrequency = 5;
 let bandWaveAmplitude = 0.025;
 
+// Scalar field settings: angle is in radians, t runs from 0 to 1.
+let fieldFrequency = 6;
+let fieldPhase = 12;
+let fieldThreshold = 0;
+let fieldAngleStep = 0.025;
+let fieldTStep = 0.025;
+
 let seed = 1;
 
 let patternMode = "Ribbed";
