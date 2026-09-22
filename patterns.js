@@ -1,5 +1,10 @@
 function drawPattern(centerX, centerY) {
-  // Draw the shared shell structure before its surface pattern.
+  // Filled field cells go underneath the shared ribs so they stay visible.
+  if (patternMode === "Field") {
+    drawField(centerX, centerY);
+  }
+
+  // Draw the shared shell structure and the other surface patterns.
   if (showRibs) {
     drawRadialRibs(centerX, centerY);
   }
@@ -133,6 +138,43 @@ function drawBanding(centerX, centerY) {
     }
 
     endShape();
+  }
+
+  pop();
+}
+
+// A scalar field returns one number for each shell-space position.
+function patternField(angle, t) {
+  return sin(angle * fieldFrequency + t * fieldPhase);
+}
+
+function drawField(centerX, centerY) {
+  push();
+  noStroke();
+
+  let endAngle = -PI * 0.2;
+  for (let angle = -PI * 0.8; angle < endAngle; angle += fieldAngleStep) {
+    let nextAngle = min(angle + fieldAngleStep, endAngle);
+    for (let t = 0; t < 1; t += fieldTStep) {
+      let nextT = min(t + fieldTStep, 1);
+
+      // Sample the middle of each cell, then classify its numeric value.
+      let sampleAngle = (angle + nextAngle) / 2;
+      let sampleT = (t + nextT) / 2;
+      let value = patternField(sampleAngle, sampleT);
+      if (value > fieldThreshold) {
+        fill(140); // Category A: darker gray.
+      } else {
+        fill(235); // Category B: lighter gray (includes equality).
+      }
+
+      // Map the cell's four shell-space corners to canvas x/y positions.
+      let a = surfacePoint(angle, t, centerX, centerY);
+      let b = surfacePoint(nextAngle, t, centerX, centerY);
+      let c = surfacePoint(nextAngle, nextT, centerX, centerY);
+      let d = surfacePoint(angle, nextT, centerX, centerY);
+      quad(a.x, a.y, b.x, b.y, c.x, c.y, d.x, d.y);
+    }
   }
 
   pop();

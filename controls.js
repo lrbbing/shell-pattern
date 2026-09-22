@@ -1,6 +1,8 @@
 let edgeFrequencySlider;
 let noiseAmplitudeSlider;
 let growthRateSlider;
+let fieldThresholdSlider;
+let fieldFrequencySlider;
 let controls;
 let patternButtons = [];
 
@@ -34,10 +36,23 @@ function createControls() {
     0.01,
   );
 
+  let fieldHeading = createElement("h2", "Field");
+  fieldHeading.class("pattern-heading");
+  fieldHeading.parent(controls);
+
+  fieldThresholdSlider = createSliderControl(
+    "Field threshold", -1, 1, fieldThreshold, 0.05,
+  );
+  fieldFrequencySlider = createSliderControl(
+    "Field frequency", 0, 16, fieldFrequency, 0.5,
+  );
+
   // Each control contains both a p5 slider and its displayed value.
   edgeFrequencySlider.slider.input(updateControls);
   noiseAmplitudeSlider.slider.input(updateControls);
   growthRateSlider.slider.input(updateControls);
+  fieldThresholdSlider.slider.input(updateControls);
+  fieldFrequencySlider.slider.input(updateControls);
 }
 
 function createPatternControls() {
@@ -55,7 +70,7 @@ function createPatternControls() {
   buttons.class("pattern-buttons");
   buttons.parent(group);
 
-  for (let mode of ["Ribbed", "Growth", "Spotted", "Banding"]) {
+  for (let mode of ["Ribbed", "Growth", "Spotted", "Banding", "Field"]) {
     let button = createButton(mode);
     button.parent(buttons);
     button.attribute("type", "button");
@@ -83,10 +98,14 @@ function updateControls() {
   edgeFrequency = edgeFrequencySlider.slider.value();
   noiseAmplitude = noiseAmplitudeSlider.slider.value();
   growthRate = growthRateSlider.slider.value();
+  fieldThreshold = fieldThresholdSlider.slider.value();
+  fieldFrequency = fieldFrequencySlider.slider.value();
 
   edgeFrequencySlider.valueLabel.html(edgeFrequency);
   noiseAmplitudeSlider.valueLabel.html(noiseAmplitude);
   growthRateSlider.valueLabel.html(growthRate);
+  fieldThresholdSlider.valueLabel.html(fieldThreshold);
+  fieldFrequencySlider.valueLabel.html(fieldFrequency);
 
   redraw();
 }
