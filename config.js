@@ -27,12 +27,16 @@ let bandWaveAmplitude = 0.025;
 let fieldFrequency = 6;
 let fieldPhase = 12;
 let fieldThreshold = 0;
-let fieldAngleStep = 0.025;
-let fieldTStep = 0.025;
+let waveWeight = 1;
+let noiseWeight = 0.8;
+let fieldNoiseScale = 3;
+let fieldColumns = 60;
+let fieldRows = 40;
 
 let seed = 1;
 
 let patternMode = "Ribbed";
+let fieldView = "Shell View";
 
 let showRibs = true;
 let showGrowthLines = true;

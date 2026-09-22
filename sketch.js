@@ -22,8 +22,10 @@ function draw() {
   let centerX = width / 2;
   let centerY = height * 0.7;
 
-  // shell center
-  circle(centerX, centerY, 10);
+  // Show the shell origin only when drawing shell geometry.
+  if (patternMode !== "Field" || fieldView === "Shell View") {
+    circle(centerX, centerY, 10);
+  }
 
   drawPattern(centerX, centerY);
 
