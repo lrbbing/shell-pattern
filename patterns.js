@@ -1,7 +1,12 @@
 function drawPattern(centerX, centerY) {
   // Filled field cells go underneath the shared ribs so they stay visible.
   if (patternMode === "Field") {
-    drawField(centerX, centerY);
+    let grid = generateFieldGrid();
+    if (fieldView === "Grid View") {
+      drawGridPreview(grid);
+      return; // The rectangular chart has no shell ribs or geometry.
+    }
+    drawFieldGrid(grid, centerX, centerY);
   }
 
   // Draw the shared shell structure and the other surface patterns.
@@ -143,32 +148,79 @@ function drawBanding(centerX, centerY) {
   pop();
 }
 
-// A scalar field returns one number for each shell-space position.
-function patternField(angle, t) {
+// Generate the regular wave field in shell parameter space.
+function waveField(angle, t) {
   return sin(angle * fieldFrequency + t * fieldPhase);
 }
 
-function drawField(centerX, centerY) {
+// Generate continuous 2D noise using the current noise seed.
+function noiseField(angle, t) {
+  // The fixed offset selects a different region of noise space.
+  return map(
+    noise(angle * fieldNoiseScale + 700, t * fieldNoiseScale),
+    0, 1, -1, 1,
+  );
+}
+
+// Compose numeric fields here; grid generation handles classification.
+function patternField(angle, t) {
+  let waveValue = waveField(angle, t);
+  let noiseValue = noiseField(angle, t);
+  let combinedValue = waveValue * waveWeight + noiseValue * noiseWeight;
+
+  return combinedValue;
+}
+
+// Store abstract pattern data only: grid[row][column] is 0 or 1.
+function generateFieldGrid() {
+  let grid = [];
+  let startAngle = -PI * 0.8;
+  let endAngle = -PI * 0.2;
+
+  for (let row = 0; row < fieldRows; row++) {
+    let gridRow = [];
+    // Sample the middle of this row's growth interval.
+    let t = (row + 0.5) / fieldRows;
+
+    for (let column = 0; column < fieldColumns; column++) {
+      // Sample the middle of this column's angle interval.
+      let angle = startAngle + (endAngle - startAngle) * (column + 0.5) / fieldColumns;
+      let value = patternField(angle, t);
+      let binaryValue = value > fieldThreshold ? 1 : 0;
+      gridRow.push(binaryValue);
+    }
+
+    grid.push(gridRow);
+  }
+
+  return grid;
+}
+
+function drawFieldGrid(grid, centerX, centerY) {
   push();
   noStroke();
 
+  // Use the supplied grid's dimensions, not the current control settings.
+  let rows = grid.length;
+  let columns = grid[0].length;
+  let startAngle = -PI * 0.8;
   let endAngle = -PI * 0.2;
-  for (let angle = -PI * 0.8; angle < endAngle; angle += fieldAngleStep) {
-    let nextAngle = min(angle + fieldAngleStep, endAngle);
-    for (let t = 0; t < 1; t += fieldTStep) {
-      let nextT = min(t + fieldTStep, 1);
 
-      // Sample the middle of each cell, then classify its numeric value.
-      let sampleAngle = (angle + nextAngle) / 2;
-      let sampleT = (t + nextT) / 2;
-      let value = patternField(sampleAngle, sampleT);
-      if (value > fieldThreshold) {
+  for (let row = 0; row < rows; row++) {
+    let t = row / rows;
+    let nextT = (row + 1) / rows;
+
+    for (let column = 0; column < columns; column++) {
+      let angle = startAngle + (endAngle - startAngle) * column / columns;
+      let nextAngle = startAngle + (endAngle - startAngle) * (column + 1) / columns;
+
+      if (grid[row][column] === 1) {
         fill(140); // Category A: darker gray.
       } else {
-        fill(235); // Category B: lighter gray (includes equality).
+        fill(235); // Category B: lighter gray.
       }
 
-      // Map the cell's four shell-space corners to canvas x/y positions.
+      // Only rendering converts cell corners to canvas x/y positions.
       let a = surfacePoint(angle, t, centerX, centerY);
       let b = surfacePoint(nextAngle, t, centerX, centerY);
       let c = surfacePoint(nextAngle, nextT, centerX, centerY);
@@ -177,5 +229,39 @@ function drawField(centerX, centerY) {
     }
   }
 
+  pop();
+}
+
+// One binary data source, a second rendering: no field or shell calculations.
+function drawGridPreview(grid) {
+  let rows = grid.length;
+  let columns = grid[0].length;
+  // Fit square cells below the seed/shortcut text, leaving room for a caption.
+  let cellSize = min((width - 80) / columns, (height - 180) / rows);
+  let left = (width - columns * cellSize) / 2;
+  let top = 100;
+
+  push();
+  stroke(190);
+  strokeWeight(0.5);
+
+  for (let row = 0; row < rows; row++) {
+    for (let column = 0; column < columns; column++) {
+      if (grid[row][column] === 1) {
+        fill(140);
+      } else {
+        fill(235);
+      }
+      let x = left + column * cellSize;
+      let y = top + row * cellSize;
+      rect(x, y, cellSize, cellSize);
+    }
+  }
+
+  noStroke();
+  fill(40);
+  textSize(12);
+  text("Grid View: 1 = dark, 0 = light | row 0 at top, column 0 at left",
+    40, top + rows * cellSize + 25);
   pop();
 }

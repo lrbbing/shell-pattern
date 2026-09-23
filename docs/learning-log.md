@@ -32,13 +32,28 @@ This records the user's reported learning progress and preferred workflow.
 - Reading large diffs
 - Shell surface parameter space: `angle` across the shell fan and normalized growth position `t` from origin to edge
 
-## Currently learning — Stage 7C
+## Currently learning — Stages 7C–7G
 
-- Scalar field: `patternField(angle, t)` returns one number using `sin(angle * fieldFrequency + t * fieldPhase)`, in the range -1 to 1.
+- Scalar field: Stage 7C introduced `sin(angle * fieldFrequency + t * fieldPhase)`, in the range -1 to 1. Stage 7D adds an organic contribution to this wave.
 - Threshold: values greater than `fieldThreshold` become category A (gray 140); values less than or equal to it become category B (gray 235).
-- Sampling: split angle and t into small cells with `fieldAngleStep` and `fieldTStep`, then evaluate the field at each cell's midpoint. Smaller steps give finer sampling and more drawing work.
-- Drawing: classify the midpoint value, then use `surfacePoint()` to turn the cell corners into canvas x/y coordinates. Shared radial ribs are drawn over the filled cells.
-- Determinism: the field uses no randomness. R changes the seeded shell geometry; the field categories in angle/t space stay the same when field settings stay the same.
+- Discretization: divide the continuous angle/t domain into `fieldRows` × `fieldColumns` cells (40 × 60 by default). Sample each cell midpoint. More rows/columns give finer sampling and more drawing work.
+- 2D arrays: `grid[row][column]` accesses a cell, with zero-based indices. Each row is its own JavaScript array.
+- Binary matrix: `generateFieldGrid()` stores 1 when `patternField(angle, t) > fieldThreshold`, otherwise 0 (including equality). It stores no x/y coordinates.
+- Index mapping: midpoint `t = (row + 0.5) / fieldRows`; midpoint `angle = startAngle + (endAngle - startAngle) * (column + 0.5) / fieldColumns`, from `-0.8 * PI` to `-0.2 * PI`.
+- Separating data from rendering: `drawFieldGrid(grid, centerX, centerY)` reads the stored bits and grid dimensions. It maps cell edges into angle/t and uses `surfacePoint()` to obtain x/y corners. 1 is gray 140; 0 is gray 235. Shared radial ribs draw above the cells.
+- Field mode generates a fresh local grid on each redraw, then passes it to the renderer. The same seed, parameters, and resolution reproduce the same matrix. No export is added.
+- 2D noise field: `noise(angle * fieldNoiseScale + 700, t * fieldNoiseScale)` varies continuously along both shell coordinates. Map its 0–1 range to -1–1 using `map()`. The fixed 700 offset selects a different region of noise space.
+- Field composition: `waveField(angle, t)` and `noiseField(angle, t)` each generate one numeric value. `patternField(angle, t)` combines them.
+- Weighted field combination: `combinedValue = waveValue * waveWeight + noiseValue * noiseWeight`. Weights 1/0 give pure sine, 0/1 give pure noise, and two nonzero weights blend them. Increasing a weight increases that field's contribution; relative weights favor rhythmic or irregular structure, though their actual sampled values also matter.
+- Stage 7E replaces Stage 7D's noise amount with Noise weight and adds Wave weight. Defaults 1/0.8 preserve the Stage 7D result.
+- Separating field generation from field rendering: the three field functions only compute numbers. `generateFieldGrid()` samples and thresholds; `drawFieldGrid()` chooses grayscale and converts corners with `surfacePoint()`.
+- Weights are not normalized. Scaling both can change classification at nonzero thresholds. Both weights at zero return zero everywhere, which belongs to category B at threshold zero.
+- Noise scale: larger values traverse more noise space across the shell, giving finer variation; smaller values give broader variation. Grid resolution controls sampling independently.
+- Combined values can exceed -1–1. The threshold slider still spans -1–1, so its endpoints need not produce a single category when weighted field values exceed those endpoints.
+- Determinism: the existing `noiseSeed(seed)` controls both geometry and the organic field. The same seed and settings reproduce the result. R selects a new seed; at Noise weight 0, only geometry changes, while at nonzero Noise weight the combined field changes too. No `random()` is used per sample.
+- One data source, multiple renderings: `drawPattern()` calls `generateFieldGrid()` once per Field redraw, then passes the grid to either `drawFieldGrid()` (Shell View) or `drawGridPreview()` (Grid View). Switching views with unchanged settings recreates identical bits.
+- Data representation vs geometry: the binary matrix contains only states. Shell View maps indices through angle/t and `surfacePoint()`; Grid View uses `x = left + column * cellSize` and `y = top + row * cellSize`, with no shell geometry or field evaluation.
+- Preview orientation: row 0 is at the top (the origin-side row in Shell View); column 0 is at the left. Cell outlines help reveal the resolution. The two view buttons select Field mode, and S saves whichever view is displayed.
 - This two-category surface is preparation for later textile / knitting mapping.
 
 ## Workflow preference
