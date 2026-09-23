@@ -1,12 +1,18 @@
 function drawPattern(centerX, centerY) {
+  // Keep export data current even when a different pattern mode is visible.
+  currentFieldGrid = generateFieldGrid();
+  currentFieldGridSeed = seed;
   // Filled field cells go underneath the shared ribs so they stay visible.
   if (patternMode === "Field") {
-    let grid = generateFieldGrid();
     if (fieldView === "Grid View") {
-      drawGridPreview(grid);
+      drawGridPreview(currentFieldGrid);
       return; // The rectangular chart has no shell ribs or geometry.
     }
-    drawFieldGrid(grid, centerX, centerY);
+    if (fieldView === "Textile View") {
+      drawTextileView(currentFieldGrid);
+      return;
+    }
+    drawFieldGrid(currentFieldGrid, centerX, centerY);
   }
 
   // Draw the shared shell structure and the other surface patterns.
@@ -263,5 +269,65 @@ function drawGridPreview(grid) {
   textSize(12);
   text("Grid View: 1 = dark, 0 = light | row 0 at top, column 0 at left",
     40, top + rows * cellSize + 25);
+  pop();
+}
+
+// Interpret each bit through a lookup object; never change the supplied grid.
+function drawTextileView(grid) {
+  let rows = grid.length;
+  let columns = grid[0].length;
+  let cellSize = min((width - 140) / columns, (height - 300) / rows);
+  let left = (width - columns * cellSize) / 2;
+  let top = 120;
+
+  push();
+  textAlign(CENTER, CENTER);
+  textSize(min(16, cellSize * 0.7));
+
+  for (let row = 0; row < rows; row++) {
+    for (let column = 0; column < columns; column++) {
+      let value = grid[row][column];
+      let meaning = textileMapping[value];
+      let x = left + column * cellSize;
+      // grid[row][column] means grid[course][needle] in this project.
+      // Flip only the screen position: array row 0 is the bottom course.
+      let y = top + (rows - 1 - row) * cellSize;
+
+      stroke(190);
+      strokeWeight(0.5);
+      fill(245);
+      rect(x, y, cellSize, cellSize);
+      noStroke();
+      fill(40);
+      text(meaning.structure, x + cellSize / 2, y + cellSize / 2);
+    }
+  }
+
+  let bottom = top + rows * cellSize;
+  noStroke();
+  fill(40);
+  textSize(12);
+
+  // Chart numbers are one-based; array indices remain zero-based.
+  textAlign(CENTER, CENTER);
+  text("1", left + cellSize / 2, bottom + 12);
+  text(columns, left + (columns - 0.5) * cellSize, bottom + 12);
+  text("1", left - 18, bottom - cellSize / 2);
+  text(rows, left - 18, top + cellSize / 2);
+  text("Needles / Wales →", width / 2, bottom + 32);
+  textAlign(LEFT, TOP);
+  text("Courses ↑", left - 30, top - 25);
+
+  let legendY = bottom + 52;
+  text("Origin: bottom-left | Columns: left → right | Rows: bottom → top", 40, legendY);
+  text("Project convention only. Chart numbers = array indices + 1.", 40, legendY + 18);
+  text("CSV writes array row 0 first (bottom course 1 here).", 40, legendY + 36);
+
+  // Build the textile meaning legend from the same mapping as the cells.
+  for (let value of [0, 1]) {
+    let meaning = textileMapping[value];
+    text(value + " → " + meaning.role + " / " + meaning.yarn +
+      " yarn / Structure " + meaning.structure, 40, legendY + 56 + 18 * value);
+  }
   pop();
 }
