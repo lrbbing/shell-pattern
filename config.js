@@ -35,6 +35,16 @@ let fieldRows = 40;
 
 let seed = 1;
 
+// Meaning is separate from the neutral 0/1 pattern data.
+const textileMapping = {
+  0: { role: "Ground", yarn: "Light", structure: "A" },
+  1: { role: "Pattern", yarn: "Dark", structure: "B" },
+};
+
+// Shared binary data for all views and CSV export, refreshed on redraw.
+let currentFieldGrid = [];
+let currentFieldGridSeed = seed;
+
 let patternMode = "Ribbed";
 let fieldView = "Shell View";
 

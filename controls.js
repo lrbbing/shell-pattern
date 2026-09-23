@@ -19,6 +19,16 @@ function createControls() {
   createPatternControls();
   createFieldViewControls();
 
+  let exportGroup = createDiv();
+  exportGroup.class("control-group pattern-buttons");
+  exportGroup.parent(controls);
+  let exportButton = createButton("Export CSV");
+  exportButton.parent(exportGroup);
+  exportButton.attribute("type", "button");
+  exportButton.mousePressed(function () {
+    exportGridCSV(currentFieldGrid);
+  });
+
   edgeFrequencySlider = createSliderControl(
     "Edge frequency",
     4,
@@ -131,7 +141,7 @@ function createFieldViewControls() {
   buttons.class("pattern-buttons");
   buttons.parent(group);
 
-  for (let view of ["Shell View", "Grid View"]) {
+  for (let view of ["Shell View", "Grid View", "Textile View"]) {
     let button = createButton(view);
     button.parent(buttons);
     button.attribute("type", "button");
