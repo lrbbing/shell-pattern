@@ -71,6 +71,15 @@ This records the user's reported learning progress and preferred workflow.
 - Endpoint numbers, direction labels, and an orientation legend make the convention visible. Semantic A/B lookup and binary export remain separate from display geometry.
 - Stage 7 is complete; machine formats, beds, carriage direction, backing, floats, and machine commands remain outside this implementation.
 
+## Stage 8B — Licensing and attribution
+
+- Copyright identifies rights in an original work; a license states what others may do with those rights. Publishing source code on GitHub does not itself grant permission to reuse it.
+- A permissive software license such as MIT permits broad use, modification, and redistribution while requiring preservation of its copyright and permission notice. The project's MIT license applies to its original software code and associated documentation.
+- Attribution credits a source or creator. Credit alone does not replace a license when code or other protected material is copied or adapted.
+- Third-party provenance means recording where outside material came from, who created it, its license, and whether it was copied, adapted, or only consulted. p5.js is loaded from a CDN and remains under its own license.
+- Inspiration means learning from an idea or visual reference; code adaptation means reusing or modifying an implementation. Sarah Spencer's 2017 Processing shell-pattern work was studied as a reference, but no copied or adapted code from it was identified in this repository. Its CC BY 3.0 Unported license is not applied to this project's original code.
+- Creative Commons licenses are generally intended for creative works rather than software. This project uses MIT for its original software code and leaves licensing of generated images or artistic outputs for a separate decision.
+
 ## Workflow preference
 
 - ChatGPT is used to explain architecture, concepts, and learning goals.
